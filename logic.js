@@ -133,7 +133,7 @@ function createMap(earthquakes) {
     var div = L.DomUtil.create('div', 'info legend'),
             grades = [0, 1, 2.5, 4.5, 6.5],
             labels = [];
-    div.innerHTML='<div><b><Michael R. Goldman</b><b>Michael R. Goldman - A Legend</b></div';
+    div.innerHTML='<div><b>Michael R. Goldman<hr>A Legend</b></div';
 // // loop through our density intervals and generate a label with a colored square for each interval
     for (var i = 0; i < grades.length; i++) {
       div.innerHTML +=
