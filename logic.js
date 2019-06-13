@@ -112,7 +112,7 @@ function createMap(earthquakes) {
   // Create our map, giving it the lighttmap, earthquakes, and tectonic plates layers to display on load
   var myMap = L.map("map", {
     center: [
-      50, -135
+      50, -120
     ],
     zoom: 4,
     layers: [lightmap, earthquakes, tectonicPlates]
