@@ -24,7 +24,7 @@ function createFeatures(earthquakeData) {
     onEachFeature: onEachFeature,
     pointToLayer: function (feature, latlng) {
       var geojsonMarkerOptions = {
-        radius: 3 * feature.properties.mag,
+        radius: 7 * feature.properties.mag,
         fillColor: getColor(feature.properties.mag),
         color: "lightgrey",
         weight: 1,
@@ -133,14 +133,23 @@ function createMap(earthquakes) {
     var div = L.DomUtil.create('div', 'info legend'),
             grades = [0, 1, 2.5, 4.5, 6.5],
             labels = [];
-
+    div.innerHTML='<div><b><Michael R. Goldman</b><b>Michael R. Goldman - A Legend</b></div';
 // // loop through our density intervals and generate a label with a colored square for each interval
-  for (var i = 0; i < grades.length; i++) {
+    for (var i = 0; i < grades.length; i++) {
       div.innerHTML +=
           '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
           grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
   }
   return div;
   };
+
+  function getColor(color) {
+    return color <= 1 ? 'blue' :
+      color <= 2.5 ? 'green' :
+      color <= 4.5 ? 'yellow' :
+      color <= 6.5 ? 'orange' :
+      'red' ;
+  }
+
   legend.addTo(myMap);
 }
