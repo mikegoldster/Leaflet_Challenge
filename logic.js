@@ -2,8 +2,6 @@
 var quakesUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
 var platesUrl = "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json"
 
-
-
 // Perform a GET request to the query URL
 d3.json(quakesUrl, function(data) {
   // Once we get a response, send the data.features object to the createFeatures function
@@ -95,18 +93,29 @@ function createMap(earthquakes) {
     "Terrain Map": terrainmap
   };
 
+  var tectonicPlates = new L.LayerGroup();
+
+  // Add Fault lines data
+  d3.json(platesUrl, function(platesData) {
+    L.geoJson(platesData, {
+      color: "orange"
+    })
+    .addTo(tectonicPlates);
+  });
+
   // Create overlay object to hold our overlay layer
   var overlayMaps = {
-    Earthquakes: earthquakes
+    Earthquakes: earthquakes,
+    "Tectonic Plates": tectonicPlates
   };
 
-  // Create our map, giving it the streetmap and earthquakes layers to display on load
+  // Create our map, giving it the lighttmap, earthquakes, and tectonic plates layers to display on load
   var myMap = L.map("map", {
     center: [
       50, -135
     ],
     zoom: 4,
-    layers: [lightmap, earthquakes]
+    layers: [lightmap, earthquakes, tectonicPlates]
   });
 
   // Create a layer control
@@ -115,5 +124,23 @@ function createMap(earthquakes) {
   L.control.layers(baseMaps, overlayMaps, {
     collapsed: false
   }).addTo(myMap);
-}
 
+// Create legend
+  var legend = L.control({position: 'bottomright'});
+
+  legend.onAdd = function (myMap) {
+
+    var div = L.DomUtil.create('div', 'info legend'),
+            grades = [0, 1, 2.5, 4.5, 6.5],
+            labels = [];
+
+// // loop through our density intervals and generate a label with a colored square for each interval
+  for (var i = 0; i < grades.length; i++) {
+      div.innerHTML +=
+          '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+          grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+  }
+  return div;
+  };
+  legend.addTo(myMap);
+}
